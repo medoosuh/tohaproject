@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Toha Project</title>
+    <!-- Include any CSS styles or libraries if needed -->
+    <style>
+        table { 
+        margin: 0 auto;
+        font-size: large;
+        border: 1px solid black;
+        }
+
+        h1 {
+        text-align: center;
+        font-weight: bold;
+        color: #023020;
+        font-size: xx-large;
+        font-family: "Times New Roman", Times, serif;
+        }
+
+        td {
+        background-color: #ADD8E6;
+        border: 1px solid black;
+        }
+
+        th,
+        td {
+        font-weight: bold;
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+        }
+
+        td {
+        font-weight: lighter;
+        }
+    </style> <!--close CSS code-->
+</head>
+<body>
+    <h1>TOHA "X" COUNTER</h1>
+    <div id="xCounterTable"></div>
+
+    <h1>TOHA "Y" COUNTER</h1>
+    <div id="yCounterTable"></div>
+
+    <h1>DATA "X" HISTORY</h1>
+    <div id="xHistoryTable"></div>
+
+    <h1>DATA "Y" HISTORY</h1>
+    <div id="yHistoryTable"></div>
+
+    <script>
+        // Fetch data from PHP script and generate tables
+        function fetchDataAndDisplayTables() {
+            fetch('database.php') // Replace 'data.php' with the correct URL of your PHP script
+                .then(response => response.json())
+                .then(data => {
+                    // Display X Counter data
+                    const xCounterTable = document.getElementById('xCounterTable');
+                    xCounterTable.innerHTML = '<table><tr><th>X</th><th>Date</th></tr>' +
+                        `<tr><td>${data.xCounter.value1}</td><td>${data.xCounter.reading_time}</td></tr></table>`;
+
+                    // Display Y Counter data
+                    const yCounterTable = document.getElementById('yCounterTable');
+                    yCounterTable.innerHTML = '<table><tr><th>Y</th><th>Date</th></tr>' +
+                        `<tr><td>${data.yCounter.value_2}</td><td>${data.yCounter.reading_time2}</td></tr></table>`;
+
+                    // Display X History data
+                    const xHistoryTable = document.getElementById('xHistoryTable');
+                    if (data.xHistory) {
+                        xHistoryTable.innerHTML = '<table><tr><th>X</th><th>Date</th></tr>' +
+                            `<tr><td>${data.xHistory.value1}</td><td>${data.xHistory.reading_time}</td></tr></table>`;
+                    } else {
+                        xHistoryTable.innerHTML = 'No data from yesterday :(';
+                    }
+
+                    // Display Y History data
+                    const yHistoryTable = document.getElementById('yHistoryTable');
+                    if (data.yHistory) {
+                        yHistoryTable.innerHTML = '<table><tr><th>Y</th><th>Date</th></tr>' +
+                            `<tr><td>${data.yHistory.value_2}</td><td>${data.yHistory.reading_time2}</td></tr></table>`;
+                    } else {
+                        yHistoryTable.innerHTML = 'No data from yesterday :(';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch data and display tables initially
+        fetchDataAndDisplayTables();
+
+        // Set up a refresh interval
+        setInterval(fetchDataAndDisplayTables, 5000); // Refresh every 5 seconds
+    </script>
+</body>
+</html>
